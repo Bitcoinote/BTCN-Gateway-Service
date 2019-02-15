@@ -1,0 +1,8 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+	"terminal.integrated.shell.windows": "C:\\Windows\\SysNative\\bash.exe",
+	"terminal.integrated.shellArgs.windows": ["--login", "-i"],
+	"standard.enable": true,
+	"javascript.validate.enable": false,
+	"jshint.enable": false
+}

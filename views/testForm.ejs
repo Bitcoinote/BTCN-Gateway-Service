@@ -1,0 +1,11 @@
+<form action="<%= BASE_URL %>/pay" method="post">
+  Amount: <input type="text" name="amount" value="5"><br>
+  Currency: <input type="text" name="currency" value="USD"><br>
+  Description: <input type="text" name="description" value="Chocolate Cake"> (visible to buyer)<br>
+  Custom Data: <input type="text" name="customData" value="order12345678"> (not visible to buyer)<br>
+  IPN URL: <input type="text" name="ipnUrl"><br>
+  Success Redirect URL: <input type="text" name="successRedirectUrl" value="http://example.com/?result=success"><br>
+  Error Redirect URL: <input type="text" name="errorRedirectUrl" value="http://example.com/?result=error"><br>
+  <label for="allowUserCancel"><input type="checkbox" value="1" name="allowUserCancel" checked id="allowUserCancel"> Allow user cancel</label><br>
+  <button type="submit">Pay Now</button>
+</form>

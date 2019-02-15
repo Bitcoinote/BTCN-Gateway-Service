@@ -1,0 +1,19 @@
+.payment-instructions table {
+  text-align: left;
+  margin: auto;
+}
+
+.payment-instructions th {
+  text-align: right;
+  border-right: 1px solid #888;
+  padding-right: 5px;
+}
+
+.payment-instructions td {
+  padding-left: 6px;
+}
+
+.payment-instructions tr {
+  border-top: 1px solid #888;
+  border-bottom: 1px solid #888;
+}

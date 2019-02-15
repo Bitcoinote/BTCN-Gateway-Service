@@ -1,0 +1,14 @@
+site_name: BTCN Gateway Service
+theme: readthedocs
+nav:
+  - _readme.md
+  - quick-start.md
+  - basics-of-operation.md
+  - installation-and-configuration.md
+  - updating.md
+  - config-variables-reference.md
+  - api-reference.md
+  - form-submit.md
+  - admin-interface.md
+  - advanced-usage.md
+  - questions-answers.md

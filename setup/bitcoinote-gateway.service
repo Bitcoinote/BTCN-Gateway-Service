@@ -1,0 +1,20 @@
+[Unit]
+Description=BitcoiNote Gateway via PM2
+After=network.target
+
+[Service]
+Type=forking
+User=ubuntu
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Environment=PATH=/home/ubuntu/.npm-global/bin:/usr/local/bin:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+Environment=PM2_HOME=/home/ubuntu/.pm2
+PIDFile=/home/ubuntu/.pm2/pm2.pid
+
+ExecStart=/home/ubuntu/.npm-global/bin/pm2 start /home/ubuntu/app/processes.json
+ExecReload=/home/ubuntu/.npm-global/bin/pm2 reload all
+ExecStop=/home/ubuntu/.npm-global/bin/pm2 kill
+
+[Install]
+WantedBy=multi-user.target

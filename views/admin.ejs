@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>BTCN Gateway Admin</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons|Montserrat:300,400,500,700">
+  <link rel="stylesheet" href="/stylesheets/bootstrap-material-design.min.css"/>
+  <link rel="stylesheet" href="/stylesheets/font-awesome.min.css"/>
+  <link rel="stylesheet" href="/stylesheets/datatables.min.css"/>
+  <link rel="stylesheet" href="/stylesheets/base.css"/>
+  <link rel="stylesheet" href="/stylesheets/admin.css"/>
+  <script src="/javascripts/jquery-3.3.1.min.js"></script>
+  <script src="/javascripts/popper.min.js"></script>
+  <script src="/javascripts/bootstrap-material-design.min.js"></script>
+  <script src="/javascripts/bootbox.min.js"></script>
+  <script src="/javascripts/datatables.min.js"></script>
+  <script src="/javascripts/admin.js"></script>
+</head>
+<body>
+  <div class="container">
+    <img class="logo" src="/images/btcn-logo.png"/>
+    <h1>BTCN Gateway Admin</h1>
+    <hr/>
+    <% if (!balance) { %>
+      <div class="alert alert-danger">
+        <strong>There is a problem with the wallet software!</strong><br/>Please check that the simplewallet software is running, RPC is enabled and the correct wallet RPC URL is set in the gateway configuration file. Also please verify that the BTCN daemon is running and is in sync with the network!<br/>
+        Wallet block height: <%= height === null ? 'Unknown' : height %>.
+      </div>
+    <% } else { %>
+      <div class="balance">
+        <h4>Server Wallet Balance</h4>
+        <span><%= balance.available.toFixed(4) %> BTCN available, <%= balance.locked.toFixed(4) %> BTCN locked.</span>
+      </div>
+    <% } %>
+    <hr/>
+    <div class="transactions">
+      <h4>Transactions</h4>
+      <table id="transactions-table" style="width: 100%;">
+        <thead>
+          <tr>
+            <th>Payment ID</th>
+            <th>Date/Time</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th data-orderable="false" data-searchable="false">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (const tx of transactions) { %>
+            <tr data-id="<%= tx.id %>" data-json="<%= JSON.stringify(txProjection(tx)) %>">
+              <td data-search="<%= tx.id %>" title="<%= tx.id %>"><tt><%= tx.id.substr(0, 16) %></tt>...</td>
+              <td data-order="<%= new Date(tx.createdAt).toISOString() %>"><script>document.write(new Date(<%= JSON.stringify(tx.createdAt) %>).toLocaleString())</script>
+              <td data-order="<%= tx.amount %>"><%= (tx.amount / SATOSHI_MULTIPLIER).toFixed(4) %> BTCN<%= (tx.originalCurrency !== 'BTCN' ? ' (' + tx.originalAmount + ' ' + tx.originalCurrency + ')' : '') %></td>
+              <td data-search="<%= tx.description %>" title="<%= tx.description %>">
+                <%= tx.description ? (tx.description.substr(0, 60) + (tx.description.length > 60 ? '...' : '')) : '(none)' %>
+                <% if (tx.toBeRefunded) { %>
+                  - <span class="text-danger"><%= (tx.toBeRefunded / SATOSHI_MULTIPLIER).toFixed(4) %> BTCN to be refunded!</span>
+                <% } %>
+              </td>
+              <td><span class="badge <%= ({ pending: 'badge-primary', completed: 'badge-success', expired: 'badge-danger', cancelled: 'badge-warning' })[tx.status] || 'badge-light' %>"><%= tx.status %></span></td>
+              <td>
+                <button class="btn btn-info info-btn" title="Info"><i class="fa fa-info fa-fw"></i></button>
+                <button class="btn btn-warning cancel-btn" title="Cancel" <%= tx.status !== 'pending' ? 'disabled' : '' %>><i class="fa fa-times-circle fa-fw"></i></button>
+                <button class="btn btn-danger delete-btn" title="Delete"><i class="fa fa-trash fa-fw"></i></button>
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <footer><small><% if (ALLOW_FORM_SUBMIT) { %><a href="/admin/testForm">Test Form</a><% } %></small></footer>
+  </div>
+</body>
+</html>

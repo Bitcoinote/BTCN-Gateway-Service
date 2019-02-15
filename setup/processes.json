@@ -1,0 +1,12 @@
+{
+  "apps": [
+    {
+      "name": "gateway",
+      "script": "npm",
+      "args": "start",
+      "cwd": "/home/ubuntu/app/gateway",
+      "log_file": "/home/ubuntu/.pm2/logs/gateway-combined.log",
+      "log_date_format": "YYYY-MM-DD HH:mm"
+    }
+  ]
+}

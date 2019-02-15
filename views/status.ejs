@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Pay with BitcoiNote</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons|Montserrat:300,400,500,700">
+  <link rel="stylesheet" href="/stylesheets/bootstrap-material-design.min.css"/>
+  <link rel="stylesheet" href="/stylesheets/font-awesome.min.css"/>
+  <link rel="stylesheet" href="/stylesheets/datatables.min.css"/>
+  <link rel="stylesheet" href="/stylesheets/base.css"/>
+  <link rel="stylesheet" href="/stylesheets/status.css"/>
+  <script src="/javascripts/jquery-3.3.1.min.js"></script>
+  <script src="/javascripts/popper.min.js"></script>
+  <script src="/javascripts/bootstrap-material-design.min.js"></script>
+  <script src="/javascripts/bootbox.min.js"></script>
+  <script src="/javascripts/datatables.min.js"></script>
+  <script src="/javascripts/status.js"></script>
+</head>
+<body>
+  <div class="container">
+    <img class="logo" src="<%= LOGO_URL || '/images/btcn-logo.png' %>"/>
+    <h1>Pay with BitcoiNote</h1>
+    <div class="your-order"><strong>Your order:</strong> <%= tx.description || 'Shopping Cart' %> for <%= tx.originalAmount %> <%= tx.originalCurrency %></div>
+    <hr/>
+    <div id="status">
+      <% if (tx.status === 'pending') { %>
+        <div class="payment-instructions">
+          <% if (tx.received > 0) { %>
+            <strong>You already a sent a payment, but you only sent part of the amount.</strong>
+          <% } %>
+          <p><i class="fa fa-fw fa-spinner fa-pulse"></i> Waiting for your payment...</p>
+          <h5>Please do the following payment in your BitcoiNote wallet:</h5>
+          <table>
+            <tr>
+              <th scope="row">Pay To</th>
+              <td><tt><%= BTCN_WALLET_ADDRESS %></tt></td>
+            </tr>
+            <tr>
+              <th scope="row">Amount</th>
+              <td><%= (tx.amount / SATOSHI_MULTIPLIER).toFixed(4) %> BTCN</td>
+            </tr>
+            <tr>
+              <th scope="row">Payment ID</th>
+              <td><tt><%= tx.id %></tt></td>
+            </tr>
+          </table>
+          <strong>Do not forget to set the payment ID, otherwise your payment will not be recognized!</strong><br/>
+          <a href="javascript:;" class="help-link">Help</a><br/>
+          <br/>
+          <h5>After you sent the payment, it may take 5-10 minutes to be recognized. Please be patient.</h5>
+          <p>Bookmark this page to get back to it later.</p>
+          <hr/>
+        </div>
+        <% if (tx.allowUserCancel && tx.received === 0) { %><button class="cancel-btn btn btn-danger">Cancel Transaction</button><% } %>
+      <% } else if (tx.status === 'completed') { %>
+        <div class="alert alert-success" role="alert">
+          <p class="lead"><i class="fa fa-check-circle fa-3x fa-fw"></i></p>
+          <h4>Payment received!</h4>
+          <% if (redirectUrl) { %>
+            <p>You will be redirected to the merchant shortly. If not, <a href="<%= redirectUrl %>" class="redirect">click here</a>.</p>
+          <% } %>
+        </div>
+      <% } else if (tx.status === 'expired') { %>
+        <div class="alert alert-danger" role="alert">
+          <p class="lead"><i class="fa fa-times-circle fa-3x fa-fw"></i></p>
+          <h4>Your transaction has expired!</h4>
+          <% if (redirectUrl) { %>
+            <p>You will be redirected to the merchant shortly. If not, <a href="<%= redirectUrl %>" class="redirect">click here</a>.</p>
+          <% } %>
+        </div>
+      <% } else if (tx.status === 'cancelled') { %>
+        <div class="alert alert-warning" role="alert">
+          <h4>Your payment was cancelled!</h4>
+          <% if (redirectUrl) { %>
+            <p>You will be redirected to the merchant shortly. If not, <a href="<%= redirectUrl %>" class="redirect">click here</a>.</p>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</body>
+</html>
