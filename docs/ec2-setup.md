@@ -16,7 +16,7 @@ The configuration below is recommended. Expected cost is around $10 per month. T
 6. Enable "T2/T3 Unlimited". Click "Next: Add Storage".
 7. Set the size to 25 GB. Click "Next: Add Tags".
 8. Click "click to add a Name tag" and enter a name for the server (e.g. "BTCNGateway"). Click "Next: Configure Security Group".
-9. Click "Add Rule". In the new row, set "Port Range" to `28389` and change "Source" to "Anywhere". Click "Review and Launch".
+9. Click "Add Rule". In the new row, set "Port Range" to `38071` and change "Source" to "Anywhere". Click "Review and Launch".
 10. Click "Launch".
 11. Select a key pair if you already have one, otherwise enter a key pair name (e.g. "gateway") and click "Download Key Pair". You need this to connect to the server! Click "Launch Instances".
 12. Click "View Instances" and look for the instance which was just created.
