@@ -76,6 +76,10 @@ if ! which sed > /dev/null; then
   fail "sed not found"
 fi
 
+function sudosimplesed {
+  sudo sed -i "s/$(echo $1 | sed -e 's/\([[\/.*]\|\]\)/\\&/g')/$(echo $2 | sed -e 's/[\/&]/\\&/g')/g" $3
+}
+
 # =====================================================
 
 cd $(dirname ${BASH_SOURCE[0]})
@@ -190,7 +194,7 @@ fi
 if ! sudo systemctl enable bitcoinote-simplewallet; then
   fail "Failed to enable bitcoinote-simplewallet.service"
 fi
-if ! sudo sed -i -e "s/PASSWORD/$walletPassword/" /etc/systemd/system/bitcoinote-simplewallet.service; then
+if ! sudosimplesed PASSWORD "$walletPassword" /etc/systemd/system/bitcoinote-simplewallet.service; then
   fail "Failed to set password in bitcoinote-simplewallet.service"
 fi
 
@@ -263,10 +267,10 @@ if [[ ! -e .env ]]; then
   read clientPassword
   prompt "Please enter the IPN secret, a strong secret key (note it down somewhere):"
   read ipnSecret
-  sed -i -e "s/CHANGEME1/$hostName/" .env
-  sed -i -e "s/CHANGEME2/$walletAddress/" .env
-  sed -i -e "s/CHANGEME3/$clientPassword/" .env
-  sed -i -e "s/CHANGEME4/$ipnSecret/" .env
+  sudosimplesed CHANGEME1 "$hostName" .env
+  sudosimplesed CHANGEME2 "$walletAddress" .env
+  sudosimplesed CHANGEME3 "$clientPassword" .env
+  sudosimplesed CHANGEME4 "$ipnSecret" .env
 fi
 
 status "Creating PM2/gateway service..."
